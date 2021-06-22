@@ -18,15 +18,15 @@
         function our_layers(map, options) {
             let datasets = new L.GeoJSON.AJAX("{% url 'gangnam' %}", {
                 onEachFeature: function(feature, layer) {
-                    layer.bindPopup(feature.properties.gangnam.toString());
+                    layer.bindPopup(feature.properties.pnu.toString());
                 }
             });
 
-            {% comment %} let points = new L.GeoJSON.AJAX("{% url 'incidence' %}", {
+            let points = new L.GeoJSON.AJAX("{% url 'incidences' %}", {
                 onEachFeature: function(feature, layer) {
                     layer.bindPopup(feature.properties.name.toString());
                 }
-            }) {% endcomment %}
+            })
             
             datasets.addTo(map);
             points.addTo(map);

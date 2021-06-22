@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.views.generic import TemplateView
 from django.core.serializers import serialize
 from django.http import HttpResponse
-from .models import Gangnam
+from .models import Gangnam, Incidences
 
 # Create your views here.
 class HomePageView(TemplateView):
@@ -10,5 +10,10 @@ class HomePageView(TemplateView):
 
 
 def gangnam_datasets(request):
-    gangnam = serialize('geojson', Gangnam.objects.all())
-    return HttpResponse(gangnam, content_type='json')
+    gangnams = serialize('geojson', Gangnam.objects.all())
+    return HttpResponse(gangnams, content_type='json')
+
+
+def points_datasets(request):
+    points = serialize('geojson', Incidences.objects.all())
+    return HttpResponse(points, content_type='json')
