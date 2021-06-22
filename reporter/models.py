@@ -13,3 +13,15 @@ class Incidences(models.Model):
 
     class Meta:
         verbose_name_plural = " Incidences"
+
+
+class Gangnam(models.Model):
+    pnu = models.CharField(max_length=19)
+    jibun = models.CharField(max_length=15)
+    bchk = models.CharField(max_length=1)
+    sgg_oid = models.BigIntegerField()
+    col_adm_se = models.CharField(max_length=5)
+    geom = models.MultiPolygonField(srid=4326)
+
+    def __unicode__(self):
+        return self.gangnam
