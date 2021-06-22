@@ -17,12 +17,40 @@
     <script>
         function our_layers(map, options) {
             let datasets = new L.GeoJSON.AJAX("{% url 'gangnam' %}", {
+                style: function colors(feature) {
+                    switch(feature.properties.pk) {
+                        case "1168011300101250007": return { 
+                                color: "orange",
+                                fillOpacity: 0.7,
+                            }; 
+                            break; 
+                        case "1168011100100340003": return { 
+                                color: "blue",
+                                fillOpacity: 0.7,
+                            }
+                            break;
+                    }
+                },
                 onEachFeature: function(feature, layer) {
                     layer.bindPopup(feature.properties.pnu.toString());
                 }
             });
 
             let points = new L.GeoJSON.AJAX("{% url 'incidences' %}", {
+                style: function colors(feature) {
+                    switch(feature.properties.name) {
+                        case "test": return { 
+                                color: "orange",
+                                fillOpacity: 0.7,
+                            }; 
+                            break; 
+                        case "Seoul": return { 
+                                color: "blue",
+                                fillOpacity: 0.7,
+                            }
+                            break;
+                    }
+                },
                 onEachFeature: function(feature, layer) {
                     layer.bindPopup(feature.properties.name.toString());
                 }
