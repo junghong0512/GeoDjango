@@ -9,13 +9,17 @@
     <style>
         #gis {width: 80%; height: 700px;}
     </style>
+    <link rel="stylesheet" type="text/css" href="{% static 'leaflet-groupedlayercontrol/leaflet.groupedlayercontrol.css' %}"></link>
     <script type="text/javascript" src="{% static 'dist/leaflet.ajax.js' %}"></script>
+    <script type="text/javascript" src="{% static 'leaflet-groupedlayercontrol/leaflet.groupedlayercontrol.js' %}"></script>
 </head>
 <body>
     <h3>We are Home</h3>
     <br/>
     <script>
         function our_layers(map, options) {
+            let osm =  L.tileLayer('http://{s}.tile.openstreetmap.org/{z}{y}{x}.png');
+
             let datasets = new L.GeoJSON.AJAX("{% url 'gangnam' %}", {
                 style: function colors(feature) {
                     switch(feature.properties.pk) {
@@ -37,20 +41,6 @@
             });
 
             let points = new L.GeoJSON.AJAX("{% url 'incidences' %}", {
-                style: function colors(feature) {
-                    switch(feature.properties.name) {
-                        case "test": return { 
-                                color: "orange",
-                                fillOpacity: 0.7,
-                            }; 
-                            break; 
-                        case "Seoul": return { 
-                                color: "blue",
-                                fillOpacity: 0.7,
-                            }
-                            break;
-                    }
-                },
                 onEachFeature: function(feature, layer) {
                     layer.bindPopup(feature.properties.name.toString());
                 }
@@ -58,6 +48,20 @@
             
             datasets.addTo(map);
             points.addTo(map);
+
+            var baseLayers = {
+                "OSM": osm,
+            }   
+
+            var groupedOverlays = {
+                "Layers": {
+                    "gangnam": datasets,
+                    "incidences": points,
+                }
+    		};
+
+		    L.control.groupedLayers(baseLayers, groupedOverlays, options).addTo(map);
+
         }
     </script>
     {% leaflet_map "gis" callback="window.our_layers" %}
