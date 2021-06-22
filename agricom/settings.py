@@ -132,6 +132,10 @@ STATIC_URL = '/static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+STATICFILES_DIRS = (
+    os.path.join(BASE_DIR, 'static'),
+)
+
 REAFLET_CONFIG = {
     'DEFAULT_CENTER': (126.870117, 37.649034),
     'DEFAULT_ZOOM': 5,

@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+{% load static %}
 {% load leaflet_tags %}
 <head>
     {% leaflet_js %}
@@ -8,10 +9,29 @@
     <style>
         #gis {width: 80%; height: 700px;}
     </style>
+    <script type="text/javascript" src="{% static 'dist/leaflet.ajax.js' %}"></script>
 </head>
 <body>
     <h3>We are Home</h3>
     <br/>
-    {% leaflet_map "gis" %}
+    <script>
+        function our_layers(map, options) {
+            let datasets = new L.GeoJSON.AJAX("{% url 'gangnam' %}", {
+                onEachFeature: function(feature, layer) {
+                    layer.bindPopup(feature.properties.gangnam.toString());
+                }
+            });
+
+            {% comment %} let points = new L.GeoJSON.AJAX("{% url 'incidence' %}", {
+                onEachFeature: function(feature, layer) {
+                    layer.bindPopup(feature.properties.name.toString());
+                }
+            }) {% endcomment %}
+            
+            datasets.addTo(map);
+            points.addTo(map);
+        }
+    </script>
+    {% leaflet_map "gis" callback="window.our_layers" %}
 </body>
 </html>
