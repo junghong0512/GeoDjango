@@ -21,7 +21,14 @@ class Gangnam(models.Model):
     bchk = models.CharField(max_length=1)
     sgg_oid = models.BigIntegerField()
     col_adm_se = models.CharField(max_length=5)
-    geom = models.MultiPolygonField(srid=4326)
+    geom = models.MultiPolygonField(srid=4326, null=True, geography=True)
 
     def __unicode__(self):
         return self.gangnam
+
+
+class Building(models.Model):
+    geom = models.MultiPolygonField(srid=4326, null=True, geography=True)
+
+    def __unicode__(self):
+        return self.building

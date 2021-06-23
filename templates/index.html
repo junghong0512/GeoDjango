@@ -7,7 +7,7 @@
     {% leaflet_css %}
     <title>Our Home</title>
     <style>
-        #gis {width: 80%; height: 700px;}
+        #gis {width: 100%; height: 800px;}
     </style>
     <link rel="stylesheet" type="text/css" href="{% static 'routing/leaflet-routing-machine.css' %}"></link>
     <link rel="stylesheet" type="text/css" href="{% static 'leaflet-groupedlayercontrol/leaflet.groupedlayercontrol.css' %}"></link>
@@ -16,69 +16,87 @@
     <script type="text/javascript" src="{% static 'leaflet-groupedlayercontrol/leaflet.groupedlayercontrol.js' %}"></script>
 </head>
 <body>
-    <h3>We are Home</h3>
+<h3>test main map page</h3>
     <br/>
+
     <script>
         function our_layers(map, options) {
-            let osm =  L.tileLayer('http://{s}.tile.openstreetmap.org/{z}{y}{x}.png');
+            var lat = 36.1358642; //위도
+            var lng = 128.0785804; //경도
+            var zoom = 7; //줌 레벨
+            let osm =  L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{y}/{x}.png', {
+                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors' //화면 오른쪽 하단 attributors
+            });
 
             var OpenTopoMap = L.tileLayer('http://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', {
-			    maxZoom: 17,
-			    attribution: 'Map data: &copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>, <a href="http://viewfinderpanoramas.org">SRTM</a> | Map style: &copy; <a href="https://opentopomap.org">OpenTopoMap</a> (<a href="https://creativecommons.org/licenses/by-sa/3.0/">CC-BY-SA</a>)'
-		    });
+                maxZoom: 17,
+                attribution: 'Map data: &copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>, <a href="http://viewfinderpanoramas.org">SRTM</a> | Map style: &copy; <a href="https://opentopomap.org">OpenTopoMap</a> (<a href="https://creativecommons.org/licenses/by-sa/3.0/">CC-BY-SA</a>)'
+            });         
 
-            let datasets = new L.GeoJSON.AJAX("{% url 'gangnam' %}", {
-                style: function colors(feature) {
-                    switch(feature.properties.pk) {
-                        case "1168011300101250007": return { 
-                                color: "orange",
-                                fillOpacity: 0.7,
-                            }; 
-                            break; 
-                        case "1168011100100340003": return { 
-                                color: "blue",
-                                fillOpacity: 0.7,
-                            }
-                            break;
-                    }
-                },
-                onEachFeature: function(feature, layer) {
-                    layer.bindPopup(feature.properties.pnu.toString());
-                }
-            });
+            // let datasets = new L.GeoJSON.AJAX("{% url 'gangnam' %}", {
+            //     style: function colors(feature) {
+            //         switch(feature.properties.pk) {
+            //             case "1168011300101250007": return { 
+            //                     color: "orange",
+            //                     fillOpacity: 0.7,
+            //                 }; 
+            //                 break; 
+            //             case "1168011100100340003": return { 
+            //                     color: "blue",
+            //                     fillOpacity: 0.7,
+            //                 }
+            //                 break;
+            //         }
+            //     },
+            //     onEachFeature: function(feature, layer) {
+            //         layer.bindPopup(feature.properties.pnu.toString());
+            //     }
+            // });
 
             let points = new L.GeoJSON.AJAX("{% url 'incidences' %}", {
                 onEachFeature: function(feature, layer) {
+                    console.log("POINTS: ", feature, layer)
                     layer.bindPopup(feature.properties.name.toString());
                 }
             })
-            
-            datasets.addTo(map);
-            points.addTo(map);
+
+            let buildings_datasets = new L.GeoJSON.AJAX("{% url 'buildings' %}", {
+                onEachFeature: function(feature, layer) {
+                    console.log("BUILDINGS: ", feature, layer)
+                    //layer.bindPopup(feature.properties.goem.toString());
+                }
+            })
+
+            console.log(buildings_datasets)
+
+            // datasets.addTo(map);
+            // points.addTo(map);
+            buildings_datasets.addTo(map);
 
             var baseLayers = {
                 "OSM": osm,
                 "TopoMap": OpenTopoMap,
             }   
 
-            var groupedOverlays = {
+           var groupedOverlays = {
                 "Layers": {
-                    "gangnam": datasets,
-                    "incidences": points,
+                   // "gangnam": datasets,
+                   "incidences": points,
+                   "building": buildings_datasets,
                 }
-    		};
+    		 };
 
 		    L.control.groupedLayers(baseLayers, groupedOverlays, options).addTo(map);
 
-            L.Routing.control({
-                waypoints: [
-                    L.latLng(57.74, 11.94),
-                    L.latLng(57.6792, 11.949)
-                ]
-            }).addTo(map);
-
+            // L.Routing.control({
+            //     waypoints: [
+            //         L.latLng(51.505, -0.09),
+            //         L.latLng(51.525, -0.29),
+            //     ]
+            // }).addTo(map);
         }
     </script>
     {% leaflet_map "gis" callback="window.our_layers" %}
+
 </body>
 </html>
