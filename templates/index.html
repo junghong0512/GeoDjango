@@ -28,18 +28,18 @@
         mapboxgl.accessToken = 'pk.eyJ1IjoianVuZ2hvbmciLCJhIjoiY2twbnBiZTA3MXQ3NjJ2bHJodHJmN2oyYSJ9.QW798Vk3hHy6I158OoHDzg';
         var map = new mapboxgl.Map({
             container: 'map', // container ID
-            style: 'mapbox://styles/junghong/ckqbn1hb73y0p19q0bwaz85z9', // style URL
+            style: 'mapbox://styles/junghong/ckqbn62kw01zy17o69394i1fa', // style URL
             center: [127.029126, 37.496300], // starting position [lng, lat]
             zoom: 15.23 // starting zoom
         });
 
-        map.on('load', function() {
-
-            map.on('click', function(e) {
-                console.log(e);
-            })
-
-        })
+        //map.on('load', function() {
+        //
+        //    map.on('click', function(e) {
+        //        console.log(e);
+        //    })
+        //
+        //})
 
     </script>
 
@@ -54,16 +54,22 @@
                 attribution: 'Map data: &copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>, <a href="http://viewfinderpanoramas.org">SRTM</a> | Map style: &copy; <a href="https://opentopomap.org">OpenTopoMap</a> (<a href="https://creativecommons.org/licenses/by-sa/3.0/">CC-BY-SA</a>)'
             }); 
 
-            var mapbox = L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png?{foo}', { foo:'pk.eyJ1IjoianVuZ2hvbmciLCJhIjoiY2twbnBiZTA3MXQ3NjJ2bHJodHJmN2oyYSJ9.QW798Vk3hHy6I158OoHDzg' }).addTo(map)        
+            var mapbox = L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png?{foo}', { foo:'pk.eyJ1IjoianVuZ2hvbmciLCJhIjoiY2twbnBiZTA3MXQ3NjJ2bHJodHJmN2oyYSJ9.QW798Vk3hHy6I158OoHDzg' })
+
+            var MapBoxBuildings = L.tileLayer('https://api.mapbox.com/styles/v1/junghong/ckqbn62kw01zy17o69394i1fa/tiles/256/{z}/{x}/{y}@2x?access_token=pk.eyJ1IjoianVuZ2hvbmciLCJhIjoiY2twbnBiZTA3MXQ3NjJ2bHJodHJmN2oyYSJ9.QW798Vk3hHy6I158OoHDzg')
+
 
             let points = new L.GeoJSON.AJAX("{% url 'incidences' %}", {
                 onEachFeature: function(feature, layer) {
                     layer.bindPopup(feature.properties.name.toString());
                 }
             })
+            
 
             let buildings_datasets = new L.GeoJSON.AJAX("{% url 'buildings' %}", {
-                onEachFeature: function(feature, layer) {}
+                onEachFeature: function(feature, layer) {
+                    layer.bindPopup("feature.properties.pk: " + feature.properties.pk);
+                }
             })
 
             // datasets.addTo(map);
@@ -73,11 +79,11 @@
             var baseLayers = {
                 "MapBox": mapbox,
                 "TopoMap": OpenTopoMap,
+                "MapBoxBuildings": MapBoxBuildings,
             }   
 
            var groupedOverlays = {
                 "Layers": {
-                   // "gangnam": datasets,
                    "incidences": points,
                    "building": buildings_datasets,
                 }
