@@ -8,6 +8,13 @@ from .models import Gangnam, Incidences, Building
 class HomePageView(TemplateView):
     template_name = 'index.html'
 
+class SubPageView(TemplateView):
+    template_name = 'subpage.html'
+
+
+class TestPageView(TemplateView):
+    template_name = 'testpage.html'
+
 
 def gangnam_datasets(request):
     gangnams = serialize('geojson', Gangnam.objects.all())
