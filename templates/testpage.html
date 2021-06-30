@@ -26,7 +26,7 @@
         mapboxgl.accessToken = 'pk.eyJ1IjoianVuZ2hvbmciLCJhIjoiY2twbnBiZTA3MXQ3NjJ2bHJodHJmN2oyYSJ9.QW798Vk3hHy6I158OoHDzg';
         var map = new mapboxgl.Map({
             container: 'map', // container ID
-            style: 'mapbox://styles/junghong/ckqitbyxt078b17mq4y5hykva', // style URL
+            style: 'mapbox://styles/junghong/ckqiygnxo0cd518moxsxm7w1p', // style URL
             //style: 'mapbox://styles/mapbox/streets-v10', // style URL
             center: [126.643855, 37.383911], // starting position [lng, lat]
             // center: [-87.61694, 41.86625], // starting position [lng, lat]
@@ -36,25 +36,26 @@
         });
 
         const r = 255 * 0.65;
-        map.on('style.load', function() {
-            map.addLayer({
-                'id': '3d-buildings',
-                'source': 'composite',
-                //'source': {
-                //    'type': 'vector',
-                //    'url': 'mapbox://mapbox.3d-buildings'
-                //},
-                'source-layer': 'building',
-                'filter': ['==', 'extrude', 'true'],
-                'type': 'fill-extrusion',
-                'minzoom': 15,
-                'paint': {
-                    'fill-extrusion-color': ['rgb', ['number', ['feature-state', 'hover-r'], r], ['number', ['feature-state', 'hover-g'], r], ['number', ['feature-state', 'hover-b'], r]],
-                    'fill-extrusion-height': ["get", "height"],
-                    'fill-extrusion-opacity': 0.6
 
-                }
-            });
+        map.on('style.load', function() {
+            // map.addLayer({
+            //     'id': '3D-extrusions',
+            //     // 'source': 'composite',
+            //     'source': {
+            //         'type': 'vector',
+            //         'url': 'mapbox://styles/junghong/ckqiygnxo0cd518moxsxm7w1p'
+            //     },
+            //     'source-layer': 'merged-0mpwhz',
+            //     'filter': ['==', 'extrude', 'true'],
+            //     'type': 'fill-extrusion',
+            //     'minzoom': 15,
+            //     'paint': {
+            //         'fill-extrusion-color': ['rgb', ['number', ['feature-state', 'hover-r'], r], ['number', ['feature-state', 'hover-g'], r], ['number', ['feature-state', 'hover-b'], r]],
+            //         'fill-extrusion-height': ["get", "height"],
+            //         'fill-extrusion-opacity': 0.6
+            // 
+            //     }
+            // });
 
             map.addSource('mapbox-dem', {
                 "type": "raster-dem",
@@ -65,31 +66,35 @@
             map.setTerrain({"source": "mapbox-dem"});
 
             let hovered = [];
-            window.addEventListener('mousemove', function(e) {
+            // window.addEventListener('mousemove', function(e) {
+            window.addEventListener('click', function(e) {
                 e.point = new mapboxgl.Point(e.clientX, e.clientY);
-                console.time('query');
-                const features = map.queryRenderedFeatures(e.point, {layers: ['3d-buildings']});
-                console.timeEnd('query');
+                // console.time('query');
+                const features = map.queryRenderedFeatures(e.point, {layers: ['3D-extrusions']});
+                // console.timeEnd('query');
 
                 for (const feature of hovered) {
                     map.setFeatureState(feature, {
-                        'hover-r': r,
-                        'hover-g': r,
-                        'hover-b': r
+                        'hover-r': 255,
+                        'hover-g': 255,
+                        'hover-b': 204
                     });
                 }
 
                 const seen = {};
                 hovered = features;
+
+                console.log(hovered);
+
                 let i = 0;
                 for (const feature of hovered) {
                     if (seen[feature.id]) continue;
 
                     seen[feature.id] = true;
                     map.setFeatureState(feature, {
-                        'hover-r': i === 0 ? 255 : r,
-                        'hover-g': i === 1 ? 255 : r,
-                        'hover-b': i >= 2 ? 255 : r
+                        'hover-r': i === 0 ? 255 : 255,
+                        'hover-g': i === 1 ? 255 : 255,
+                        'hover-b': i >= 2 ? 204 : 204
                     });
                     i++;
                 }

@@ -28,7 +28,7 @@
         mapboxgl.accessToken = 'pk.eyJ1IjoianVuZ2hvbmciLCJhIjoiY2twbnBiZTA3MXQ3NjJ2bHJodHJmN2oyYSJ9.QW798Vk3hHy6I158OoHDzg';
         var map = new mapboxgl.Map({
             container: 'map', // container ID
-            style: 'mapbox://styles/junghong/ckqitbyxt078b17mq4y5hykva', // style URL
+            style: 'mapbox://styles/junghong/ckqiygnxo0cd518moxsxm7w1p', // style URL
             center: [126.643855, 37.383911], // starting position [lng, lat]
             zoom: 15.23 // starting zoom
         });
@@ -56,7 +56,7 @@
 
             var mapbox = L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png?{foo}', { foo:'pk.eyJ1IjoianVuZ2hvbmciLCJhIjoiY2twbnBiZTA3MXQ3NjJ2bHJodHJmN2oyYSJ9.QW798Vk3hHy6I158OoHDzg' })
 
-            var MapBoxBuildings = L.tileLayer('https://api.mapbox.com/styles/v1/junghong/ckqitbyxt078b17mq4y5hykva/tiles/256/{z}/{x}/{y}@2x?access_token=pk.eyJ1IjoianVuZ2hvbmciLCJhIjoiY2twbnBiZTA3MXQ3NjJ2bHJodHJmN2oyYSJ9.QW798Vk3hHy6I158OoHDzg')
+            var MapBoxBuildings = L.tileLayer('https://api.mapbox.com/styles/v1/junghong/ckqiygnxo0cd518moxsxm7w1p/tiles/256/{z}/{x}/{y}@2x?access_token=pk.eyJ1IjoianVuZ2hvbmciLCJhIjoiY2twbnBiZTA3MXQ3NjJ2bHJodHJmN2oyYSJ9.QW798Vk3hHy6I158OoHDzg')
 
 
             let points = new L.GeoJSON.AJAX("{% url 'incidences' %}", {
