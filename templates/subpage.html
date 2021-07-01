@@ -43,7 +43,7 @@
         var map = new mapboxgl.Map({
             container: 'map', // container ID
             style: 'mapbox://styles/junghong/ckqiygnxo0cd518moxsxm7w1p', // style URL
-            center: [126.735901, 37.348980],// starting position [lng, lat]
+            center: [127.027974, 37.498015],// starting position [lng, lat]
             zoom: 15.23, // starting zoom
             pitch: 0,
             antialias: true, // create the gl context with MSAA antialiasing, so custom layers are antialiased
@@ -70,7 +70,7 @@
               displayFeat[prop] = feat[prop];
             });
             return displayFeat;
-          });
+          }); 
           
           document.getElementById('features').innerHTML = JSON.stringify(
             displayFeatures,
