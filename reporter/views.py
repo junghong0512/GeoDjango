@@ -16,6 +16,11 @@ class TestPageView(TemplateView):
     template_name = 'testpage.html'
 
 
+class SubTestPageView(TemplateView):
+    template_name = 'subtestpage.html'
+
+
+
 def gangnam_datasets(request):
     gangnams = serialize('geojson', Gangnam.objects.all())
     return HttpResponse(gangnams, content_type='json')

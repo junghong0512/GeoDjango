@@ -22,6 +22,6 @@ building_shp = os.path.abspath(os.path.join(os.path.dirname(__file__), 'data/bui
 
 
 def run(verbose=True):
-    # lm = LayerMapping(Gangnam, gangnam_shp, gangnam_mapping, transform=False, encoding='cp949')
-    lm = LayerMapping(Building, building_shp, building_mapping, transform=True, encoding='utf-8')
+    lm = LayerMapping(Gangnam, gangnam_shp, gangnam_mapping, transform=False, encoding='cp949')
+    #lm = LayerMapping(Building, building_shp, building_mapping, transform=True, encoding='utf-8')
     lm.save(strict=True, verbose=verbose)

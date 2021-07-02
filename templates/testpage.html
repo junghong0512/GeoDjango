@@ -47,13 +47,13 @@
                         "fill-extrusion-height": [
                             "case", 
                             ["feature-state", "hover"],
-                            100,
+                            ["feature-state", "height"],
                             0,
                         ],
                         "fill-extrusion-color": "#ffffff"
                     },
-                    "generateId": false,
-                }, 'road-label');
+                    "promotedId": {'merged-0mpwhz': "id"}
+                }, '3D-extrusions');
             }
 
             let fHover;
@@ -62,6 +62,8 @@
                 var features = map.queryRenderedFeatures(e.point, {
                     layers: ['3d-extrusions']
                 });
+
+                console.log(features)
 
                 if (features[0]) {
                     mouseout();
@@ -83,7 +85,8 @@
                     sourceLayer: fHover.sourceLayer,
                     id: fHover.id,
                 }, {
-                    hover: false
+                    hover: false,
+                    height: 0,
                 });
             }
 
@@ -95,7 +98,8 @@
                     sourceLayer: fHover.sourceLayer,
                     id: fHover.id,
                 }, {
-                    hover: true
+                    hover: true,
+                    height: fHover.properties.NMLY * 2
                 });
             }
         });

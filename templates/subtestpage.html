@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html>
+{% load static %}
+{% load leaflet_tags %}
+<head>
+    {% leaflet_js %}
+    {% leaflet_css %}
+    <title>Our Home</title>
+    <style>
+        body { margin:0; padding:0; }
+        #map { position: absolute; top:0; bottom: 0; width: 100%; }
+        #features {
+          position: absolute;
+          top: 0;
+          right: 0;
+          bottom: 0;
+          width: 50%;
+          overflow: auto;
+          background: rgba(255, 255, 255, 0.8);
+        }
+        #map canvas {
+          cursor: crosshair;
+        }
+    </style>
+    <link rel="stylesheet" type="text/css" href="{% static 'routing/leaflet-routing-machine.css' %}"></link>
+    <link rel="stylesheet" type="text/css" href="{% static 'leaflet-groupedlayercontrol/leaflet.groupedlayercontrol.css' %}"></link>
+    <script type="text/javascript" src="{% static 'dist/leaflet.ajax.js' %}"></script>
+    <script type="text/javascript" src="{% static 'routing/leaflet-routing-machine.js' %}"></script>
+    <script type="text/javascript" src="{% static 'leaflet-groupedlayercontrol/leaflet.groupedlayercontrol.js' %}"></script>
+
+    <script src="{% static 'js/threejs/three.js' %}"></script>
+    <script src="{% static 'js/threejs/OBJLoader.js' %}"></script>  
+    <script src="{% static 'js/threejs/OrbitControls.js' %}"></script>
+
+    <script src='https://api.mapbox.com/mapbox-gl-js/v2.3.1/mapbox-gl.js'></script>
+    <link href='https://api.mapbox.com/mapbox-gl-js/v2.3.1/mapbox-gl.css' rel='stylesheet' />
+</head>
+<body>
+    <div id='map'></div>
+    <pre id="features"></pre>
+    <script>
+        mapboxgl.accessToken = 'pk.eyJ1IjoianVuZ2hvbmciLCJhIjoiY2twbnBiZTA3MXQ3NjJ2bHJodHJmN2oyYSJ9.QW798Vk3hHy6I158OoHDzg';
+        var map = new mapboxgl.Map({
+            container: 'map', // container ID
+            style: 'mapbox://styles/junghong/ckqiygnxo0cd518moxsxm7w1p', // style URL
+            center: [127.027974, 37.498015],// starting position [lng, lat]
+            zoom: 15.23, // starting zoom
+            pitch: 0,
+            antialias: true, // create the gl context with MSAA antialiasing, so custom layers are antialiased
+        });
+
+        
+
+        map.on('load', () => {
+            // Insert the layer beneath any symbol layer
+            const layers = map.getStyle().layers;
+
+            // map.removeLayer("3D-extrusions")
+
+            let labelLayerId;
+            for(let i = 0 ; i < layers.length ; i++) {
+                if(layers[i].type === "symbol" && layers[i].layout["text-field"]) {
+                    labelLayerId = layers[i].id;
+                    break;
+                }
+            }
+
+            map.addLayer({
+                id: "3D-extrusions-click",
+                source: "composite",
+                "source-layer": 'merged-0mpwhz',
+                //filter: ["==", "extrude", "true"],  // 변경할 부분 예상(geojson에 맞게)
+                type: "fill-extrusion",
+                minzoom: 0,
+                paint: {
+                    // color based on feature state
+                    "fill-extrusion-color": [
+                        "match",
+                        ["feature-state", "highlight"],
+                        "true",
+                        "#FFF",
+                        "#AAA"
+                    ],
+                    // use an 'interpolate' expression to add a smooth transition effect to the
+                    // buildings as the user zooms in
+                    "fill-extrusion-height": ["get", "NMLY"],
+                    "fill-extrusion-opacity": 0.7
+                }
+            }, labelLayerId );
+
+            
+            function findParent(features) {
+                const clicked = features[0];
+                
+                if(clicked.properties.UFID) {
+                    const all_features = map.queryRenderedFeatures({
+                        layers: ["3D-extrusions"],
+                        filter: ["==", "id", "clicked.properties.id"]
+                    });
+
+                    let parent;
+                    all_features.every(feature => {
+                        if(feature.id === clicked.properties.id) {
+                            parent = feature;
+                            return false;
+                        } else {
+                            return true;
+                        }
+                    });
+                    return parent ? parent : clicked;
+                } else {
+                    return clicked;
+                }
+            }
+
+
+            const selectFeatures = (() => {
+                let previous;
+                return ids => {
+                    if (ids !== previous && previous !== undefined) {
+                        previous.forEach(p_id => {
+                            map.setFeatureState(
+                                {
+                                    source: "composite",
+                                    sourceLayer: "merged-0mpwhz",
+                                    id: p_id
+                                },
+                                { highlight: "false" }
+                            );
+                        });
+                    }
+                    previous = ids;
+
+                    ids.forEach(id => {
+                        map.setFeatureState(
+                            { source: "composite", sourceLayer: "merged-0mpwhz", id },
+                            { highlight: "true", test: "12314313" }
+                        );
+                    });
+                };
+            })();
+
+            map.on("click", e => {
+                const features = map.queryRenderedFeatures(e.point, {
+                    layers: ["3D-extrusions"]
+                });
+
+                if (features) {
+                    // find the findParent
+                    const parent = findParent(features);
+
+                    let ids = [parent.id];
+                    if(parent.properties.parts) {
+                        ids = ids.concat(JSON.parse(parent.properties.parts));
+                    }
+                    selectFeatures(ids);
+                }
+            })
+        })
+
+
+
+
+
+        map.on('click', function (e) {
+          var features = map.queryRenderedFeatures(e.point);
+
+          // Limit the number of properties we're displaying for
+          // legibility and performance
+          var displayProperties = [
+            'type',
+            'properties',
+            'id',
+            'layer',
+            'source',
+            'sourceLayer',
+            'state'
+          ];
+            
+          var displayFeatures = features.map(function (feat) {
+            var displayFeat = {};
+            displayProperties.forEach(function (prop) {
+              displayFeat[prop] = feat[prop];
+            });
+            return displayFeat;
+          }); 
+          
+          document.getElementById('features').innerHTML = JSON.stringify(
+            displayFeatures,
+            null,
+            2
+          );
+        });
+
+    </script>
+
+
+</body>
+</html>
