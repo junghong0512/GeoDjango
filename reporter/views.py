@@ -20,6 +20,9 @@ class SubTestPageView(TemplateView):
     template_name = 'subtestpage.html'
 
 
+class DupIdCheckPageView(TemplateView):
+    template_name = 'duplicateIdCheck.html'
+
 
 def gangnam_datasets(request):
     gangnams = serialize('geojson', Gangnam.objects.all())
