@@ -14,7 +14,7 @@
           top: 0;
           right: 0;
           bottom: 0;
-          width: 50%;
+          width: 30%;
           overflow: auto;
           background: rgba(255, 255, 255, 0.8);
         }
@@ -53,8 +53,8 @@
         mapboxgl.accessToken = 'pk.eyJ1IjoianVuZ2hvbmciLCJhIjoiY2twbnBiZTA3MXQ3NjJ2bHJodHJmN2oyYSJ9.QW798Vk3hHy6I158OoHDzg';
         let map = new mapboxgl.Map({
             container: 'map', // container ID
-            style: 'mapbox://styles/junghong/ckqiygnxo0cd518moxsxm7w1p', // style URL
-            center: [127.027974, 37.498015],// starting position [lng, lat]
+            style: 'mapbox://styles/junghong/ckqrasy9j3rm618uoethm0itp', // style URL
+            center: [127.047956, 37.504059],// starting position [lng, lat]
             zoom: 15, // starting zoom
             pitch: 0,
             antialias: true, // create the gl context with MSAA antialiasing, so custom layers are antialiased
@@ -98,8 +98,8 @@
                     ],
                     // use an 'interpolate' expression to add a smooth transition effect to the
                     // buildings as the user zooms in
-                    "fill-extrusion-height": ["*", ["get", "NMLY"], 2],
-                    "fill-extrusion-opacity": 0.7,
+                    "fill-extrusion-height": ["*", ["get", "NMLY"], 1.5],
+                    "fill-extrusion-opacity": 0.9,
                 },
                 promoteId: true
             }, labelLayerId );
@@ -223,20 +223,22 @@
                 'right': [-markerRadius, (markerHeight - markerRadius) * -1]
             };
 
+            let ANNO = features[0].properties.ANNO;
             let NAME = features[0].properties.NAME;
-            let BUNU = features[0].properties.BUNU
-            let KIND = features[0].properties.KIND
-            let NMLY = features[0].properties.NMLY
-            let RDNM = features[0].properties.RDNM
-            let SERV = features[0].properties.SERV
-            let SHAPE_Area = features[0].properties.SHAPE_Area
-            let SHAPE_Leng = features[0].properties.SHAPE_Leng
-            let UFID = features[0].properties.UFID
-            let geom_Area = features[0].properties.geom_Area
-            let geom_Lengt = features[0].properties.geom_Lengt
-            let layer = features[0].properties.layer
+            let BUNU = features[0].properties.BUNU;
+            let KIND = features[0].properties.KIND;
+            let NMLY = features[0].properties.NMLY;
+            let RDNM = features[0].properties.RDNM;
+            let SERV = features[0].properties.SERV;
+            let SHAPE_Area = features[0].properties.SHAPE_Area;
+            let SHAPE_Leng = features[0].properties.SHAPE_Leng;
+            let UFID = features[0].properties.UFID;
+            let geom_Area = features[0].properties.geom_Area;
+            let geom_Lengt = features[0].properties.geom_Lengt;
+            let layer = features[0].properties.layer;
 
             let html = `
+                        ANNO: ${ANNO}<br/>
                         NAME: ${NAME}<br/>
                         BUNU: ${BUNU}<br/>
                         KIND: ${KIND}<br/>
@@ -256,8 +258,6 @@
                 .setHTML(html)
                 .setMaxWidth("300px")
                 .addTo(map);
-
-            console.log(features)
         })
 
     </script>
