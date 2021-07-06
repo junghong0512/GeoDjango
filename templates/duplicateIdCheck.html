@@ -47,8 +47,71 @@
         }
     </style>
 
+    <style>
+        #menu {
+            background: #fff;
+            position: absolute;
+            z-index: 1;
+            top: 10px;
+            left: 10px;
+            border-radius: 3px;
+            width: 120px;
+            border: 1px solid rgba(0, 0, 0, 0.4);
+            font-family: 'Open Sans', sans-serif;
+        }
+        
+        #selectHeight {
+            background: #fff;
+            position: absolute;
+            z-index: 1;
+            top: 100px;
+            left: 10px;
+            border-radius: 3px;
+            border: 1px solid rgba(0, 0, 0, 0.4);
+            font-family: 'Open Sans', sans-serif;
+        }
+
+        #selectHeight select {
+            width: 100%;
+            height: 20px;
+        }
+        
+        #menu a {
+            font-size: 13px;
+            color: #404040;
+            display: block;
+            margin: 0;
+            padding: 0;
+            padding: 10px;
+            text-decoration: none;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.25);
+            text-align: center;
+        }
+        
+        #menu a:last-child {
+            border: none;
+        }
+        
+        #menu a:hover {
+            background-color: #f8f8f8;
+            color: #404040;
+        }
+        
+        #menu a.active {
+            background-color: #3887be;
+            color: #ffffff;
+        }
+        
+        #menu a.active:hover {
+            background: #3074a4;
+        }
+    </style>
+    
+    <nav id="menu"></nav>
     <div id='map'></div>
     <pre id="features"></pre>
+    <nav id="selectHeight"></nav>
+    
     <script>
         mapboxgl.accessToken = 'pk.eyJ1IjoianVuZ2hvbmciLCJhIjoiY2twbnBiZTA3MXQ3NjJ2bHJodHJmN2oyYSJ9.QW798Vk3hHy6I158OoHDzg';
         let map = new mapboxgl.Map({
@@ -59,11 +122,7 @@
             pitch: 0,
             antialias: true, // create the gl context with MSAA antialiasing, so custom layers are antialiased
         });
-        
-
-        let popup = new mapboxgl.Popup({ offset: 25 }).setText(
-            "test"
-        );
+    
 
         let el = document.createElement("div");
         el.id = 'marker'
@@ -73,6 +132,7 @@
             const layers = map.getStyle().layers;
 
             let labelLayerId;
+
             for(let i = 0 ; i < layers.length ; i++) {
                 if(layers[i].type === "symbol" && layers[i].layout["text-field"]) {
                     labelLayerId = layers[i].id;
@@ -87,17 +147,20 @@
                 // filter: ["==", "extrude", "true"],  // 변경할 부분 예상(geojson에 맞게)
                 type: "fill-extrusion",
                 minzoom: 0,
+                layout: {
+                    visibility: 'visible',
+                },
+
                 paint: {
                     // color based on feature state
                     "fill-extrusion-color": [
-                        "match",
-                        ["feature-state", "highlight"],
-                        "true",
+                        "case",
+                        ["==", ["feature-state", "highlight"], "true"],
                         "#FFF",
-                        "#AAA"
+                        ["==", ["get", "NMLY"], ["feature-state", "heightFilterValue"]],
+                        "#151",
+                        "#AAA",
                     ],
-                    // use an 'interpolate' expression to add a smooth transition effect to the
-                    // buildings as the user zooms in
                     "fill-extrusion-height": ["*", ["get", "NMLY"], 1.5],
                     "fill-extrusion-opacity": 0.9,
                 },
@@ -260,7 +323,79 @@
                 .addTo(map);
         })
 
+        map.on('idle', function() {
+            if(map.getLayer("3D-extrusions-click")) {
+                let toggleableLayerIds = ["3D-extrusions-click"];
+                for(i = 0 ; i < toggleableLayerIds.length ; i++) {
+                    let id = toggleableLayerIds[i];
+                    if(!document.getElementById(id)) {
+                        let link = document.createElement("a");
+                        link.id = id;
+                        link.href = "#"
+                        link.textContent = id;
+                        link.className = "active";
+
+                        let selectBox = document.createElement("select");
+                        let heightOptionsArr = [...Array(30).keys()];
+                        let html = "";
+                        heightOptionsArr.map(item => html += `<option value=${item}>${item}층</option>`)
+                        selectBox.innerHTML = html;
+                        let selectContainer = document.getElementById("selectHeight")
+                        
+                        
+                        selectBox.onchange = function (e) {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            const all_features = map.queryRenderedFeatures({
+                                layers: ["3D-extrusions-click"]
+                            });
+
+                            all_features.map(feature => {
+                                map.setFeatureState(
+                                    { source: "composite", sourceLayer: "merged-0mpwhz", id: feature.id },
+                                    { heightFilterValue: parseInt(e.target.value) }
+                                )
+                            }) 
+                        }
+
+                        link.onclick = function (e) {
+                            let clickedLayer = this.textContent;
+                            e.preventDefault();
+                            e.stopPropagation();
+
+                            let visibility = map.getLayoutProperty(
+                                clickedLayer,
+                                'visibility'
+                            );
+
+                            if(visibility === 'visible') {
+                                map.setLayoutProperty(
+                                    clickedLayer,
+                                    'visibility',
+                                    'none'
+                                );
+                                this.className = "";
+                            } else {
+                                this.className = "active";
+                                map.setLayoutProperty(
+                                    clickedLayer,
+                                    'visibility',
+                                    'visible'
+                                );
+                            }
+                        };
+                        let layers = document.getElementById("menu");
+                        layers.appendChild(link);
+                        let selectBoxContainer = document.getElementById("selectHeight");
+                        selectContainer.appendChild(selectBox);
+                    }
+                }
+            }
+        })
+
     </script>
+
+
 
 
 </body>
