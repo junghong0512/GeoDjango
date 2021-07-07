@@ -7,8 +7,27 @@ let map = new mapboxgl.Map({
     pitch: 0,
     antialias: true, // create the gl context with MSAA antialiasing, so custom layers are antialiased
 });
-let el = document.createElement("div");
-el.id = 'marker'
+
+let geocoder = new MapboxGeocoder({
+    accessToken: mapboxgl.accessToken,
+    flyTo: {
+        bearing: 0,
+        // Control the flight curve, making it move slowly and
+        // zoom out almost completely before starting to pan.
+        speed: 0.5, // Make the flying slow.
+        curve: 1, // Change the speed at which it zooms out.
+        // This can be any easing function: it takes a number between
+        // 0 and 1 and returns another number between 0 and 1.
+        easing: function (t) {
+            return t;
+        }
+    },
+    mapboxgl: mapboxgl
+})
+
+// Add the geocoder to the map
+document.getElementById('geocoder').appendChild(geocoder.onAdd(map));
+
 map.on('load', () => {
     // Insert the layer beneath any symbol layer
     const layers = map.getStyle().layers;
@@ -201,7 +220,6 @@ map.on('idle', function() {
                 let html = "";
                 heightOptionsArr.map(item => html += `<option value=${item}>${item}층</option>`)
                 selectBox.innerHTML = html;
-                let selectContainer = document.getElementById("selectHeight")
                 
                 
                 selectBox.onchange = function (e) {
@@ -244,7 +262,7 @@ map.on('idle', function() {
                 let layers = document.getElementById("menu");
                 layers.appendChild(link);
                 let selectBoxContainer = document.getElementById("selectHeight");
-                selectContainer.appendChild(selectBox);
+                selectBoxContainer.appendChild(selectBox);
             }
         }
     }
