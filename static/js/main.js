@@ -86,7 +86,6 @@ map.on('load', () => {
         id: "3D-extrusions-click",
         source: "composite",
         "source-layer": 'merged-0mpwhz',
-        filter: ["!=", "extrude", "true"],  // 변경할 부분 예상(geojson에 맞게)
         type: "fill-extrusion",
         minzoom: 0,
         layout: {
@@ -100,13 +99,13 @@ map.on('load', () => {
                 "#AB1",
                 ["==", ["get", "NMLY"], ["feature-state", "heightFilterValue"]],
                 "#555",
-                ["has", ["get", "KIND"], ["feature-state", "selected_kind"]],
+                ["has", ["get", "KIND"], [["feature-state", "selected_kind"]]],
                 "#F15",
                 ["has", ["get", "SERV"], ["feature-state", "selected_serv"]],
                 "#456",
                 "#FFF",
             ],
-            "fill-extrusion-height": ["*", ["get", "NMLY"], 2],
+            "fill-extrusion-height": ["*", ["get", ""], 2],
             "fill-extrusion-opacity": 0.8,
         },
         promoteId: true
