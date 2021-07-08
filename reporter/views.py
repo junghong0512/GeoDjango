@@ -8,6 +8,7 @@ from .models import Gangnam, Incidences, Building
 class HomePageView(TemplateView):
     template_name = 'index.html'
 
+
 class SubPageView(TemplateView):
     template_name = 'subpage.html'
 
@@ -22,6 +23,10 @@ class SubTestPageView(TemplateView):
 
 class DupIdCheckPageView(TemplateView):
     template_name = 'duplicateIdCheck.html'
+
+
+class MainPageView(TemplateView):
+    template_name = 'mainpage.html'
 
 
 def gangnam_datasets(request):

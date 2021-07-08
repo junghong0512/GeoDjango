@@ -1,0 +1,131 @@
+body { margin:0; padding:0; }
+
+#map { position: absolute; top:0; bottom: 0; width: 100%; }
+
+#features {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: 30%;
+    overflow: auto;
+    background: rgba(255, 255, 255, 0.8);
+ }
+
+ #map canvas {
+    cursor: crosshair;
+ }
+
+
+.marker {
+    display: block;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    padding: 0;
+}
+
+#menu {
+    background: #fff;
+    position: absolute;
+    z-index: 1;
+    top: 10px;
+    left: 10px;
+    border-radius: 3px;
+    width: 120px;
+    border: 1px solid rgba(0, 0, 0, 0.4);
+    font-family: 'Open Sans', sans-serif;
+}
+
+#menu a {
+    font-size: 13px;
+    color: #404040;
+    display: block;
+    margin: 0;
+    padding: 0;
+    padding: 10px;
+    text-decoration: none;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.25);
+    text-align: center;
+}
+
+#menu a:last-child {
+    border: none;
+}
+
+#menu a:hover {
+    background-color: #f8f8f8;
+    color: #404040;
+}
+
+#menu a.active {
+    background-color: #3887be;
+    color: #ffffff;
+}
+
+#menu a.active:hover {
+    background: #3074a4;
+}
+
+
+/* SELECT HEIGHT BOX */
+#selectHeight {
+    background: #fff;
+    position: absolute;
+    z-index: 1;
+    top: 100px;
+    left: 10px;
+    width: 60px;
+    height: 40px;
+    border-radius: 3px;
+    border: 1px solid rgba(0, 0, 0, 0.4);
+    font-family: 'Open Sans', sans-serif;
+}
+#selectHeight select {
+    width: 100%;
+    height: 100%;
+}
+
+
+
+/* SELECT YONGDO BOX */
+#kindContainer {
+    background: rgb(250, 250, 250);
+    position: absolute;
+    z-index: 1;
+    bottom: 350px;
+    left: 10px;
+    width: 200px;
+    height: 250px;
+    border-radius: 3px;
+    border: 1px solid rgba(0, 0, 0, 0.4);
+    font-family: 'Open Sans', sans-serif;
+    overflow: auto;
+}
+
+/* SELECT YONGDO BOX */
+#yongdoContainer {
+    background: rgb(250, 250, 250);
+    position: absolute;
+    z-index: 1;
+    bottom: 50px;
+    left: 10px;
+    width: 200px;
+    height: 300px;
+    border-radius: 3px;
+    border: 1px solid rgba(0, 0, 0, 0.4);
+    font-family: 'Open Sans', sans-serif;
+    overflow: auto;
+}
+
+
+
+/* GEOCODER CSS */
+.geocoder {
+    position: absolute;
+    z-index: 1;
+    width: 30%;
+    left: 50%;
+    margin-left: -25%;
+    top: 10px;
+}

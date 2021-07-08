@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+{% load static %}
+{% load leaflet_tags %}
+<head>
+    {% leaflet_js %}
+    {% leaflet_css %}
+    <title>Our Home</title>
+
+    <link rel="stylesheet" type="text/css" href="{% static 'routing/leaflet-routing-machine.css' %}"></link>
+    <link rel="stylesheet" type="text/css" href="{% static 'leaflet-groupedlayercontrol/leaflet.groupedlayercontrol.css' %}"></link>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/main.css' %}"></link>
+
+    <script src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v4.7.0/mapbox-gl-geocoder.min.js"></script>
+    <link rel="stylesheet" href="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v4.7.0/mapbox-gl-geocoder.css" type="text/css">
+    <script src='https://api.mapbox.com/mapbox-gl-js/v2.3.1/mapbox-gl.js'></script>
+    <link href='https://api.mapbox.com/mapbox-gl-js/v2.3.1/mapbox-gl.css' rel='stylesheet' />
+</head>
+<body>
+    <nav id="menu"></nav>
+    <div id='map'></div>
+    <pre id="features"></pre>
+    <nav id="selectHeight"></nav>
+    <div id="geocoder" class="geocoder"></div>
+    <div id="kindContainer" class="kindCheckbox"></div>
+    <div id="yongdoContainer" class="yongdoCheckbox"></div>
+
+    <script src="{% static 'js/main.js' %}"></script>
+
+</body>
+</html>
